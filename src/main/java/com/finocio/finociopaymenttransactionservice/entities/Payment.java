@@ -11,39 +11,30 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiParam("generado automáticamente por la base de datos")
     private Long paymentId;
 
     @Column
-    @ApiParam("fecha de creación de la transacción")
     private String date;
 
     @Column
-    @ApiParam("cantidad de la transacción")
     private Double amount;
 
     @Column
-    @ApiParam("Identificador del usuario que realizó la transacción")
     private String userId;
 
     @Column
-    @ApiParam("número de los últimos 4 dígitos de la tarjeta utilizada para el pago, generado de manera aleatoria.")
     private Integer cardLast4number;
 
     @Column
-    @ApiParam("número de autorización del pago, generado de manera aleatoria")
     private Integer authNumber;
 
     @Column
-    @ApiParam("nombre del banco que procesó el pago, generado de manera aleatoria, dentro de una lista de bancos Ej. [BBVA, Santander, CaixaBank] ")
     private String bank;
 
     @Column
-    @ApiParam("Indica si el pago fue realizado de manera contactless o no, generado de manera aleatoria ")
     private Boolean isContractless;
 
     @Column
-    @ApiParam(" PAYMENT_SUCCESS, indicando que la transacción fue exitosa")
     private String status;
 
     public Payment(){

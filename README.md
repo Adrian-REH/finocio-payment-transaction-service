@@ -10,14 +10,21 @@
 5. El nombre del proyecto será finocio-payment-transaction-service.
 
 
-## ARCHITECTURE MVC
+## Estructura de la aplicación
 ```
+├── config
+│   └── SwaggerConfig.java
 ├── controllers
 │   └── PaymentController.java
 ├── dtos
 │   └── PaymentRequest.java
 ├── entities
 │   └── Payment.java
+├── exceptions
+│   ├── PaymentRequqestAmountCeroException.java
+│   ├── PaymentRequqestAmountNullException.java
+│   ├── PaymentRequqestUserIdBlankException.java
+│   └── PaymentRequqestUserIdNullException.java
 ├── repositories
 │   └── PaymentH2Repository.java
 ├── services
@@ -25,49 +32,47 @@
 │   │    └── PaymentServiceImpl.java
 │   ├── PaymentH2Service.java
 │   └── PaymentService.java
-├── config
-│   └── SwaggerConfig.java
 ── test
-    ├── repositories
-    │   ├── PaymentRepositoryTest.java
-    │   └── PaymentH2RepositoryDataJpaTest.java 
     ├── controllers
-    │   └── PaymentControllerTest.java
+    │   └── PaymentControllerTest.java 
+    ├── repositories
+    │   └── PaymentH2RepositoryDataJpaTest.java
     └── services
         └── PaymentServiceTest.java
 
 ```
-Utilizo **_PaymentH2Service.java_** para gestionar los datos de la transaccion en H2, antes haciendo uso 
-de **_PaymentService_** para completar la transaccion siempre y cuando se cumplan ciertos requerimientos.
-**_PaymentController.java_** es donde se alojaran las funciones para la REST documentandolo con Swagger por cierto
-configuro Swagger on **_SwaggerConfig.java_**
 
-Creo **_PaymentRequest_** como Object data transfer para las Request haciendo un buen uso de JPA.
-
-Para mejorar la calidad de los datos a gestionar en H2 voy a testear utilizando **_@DataJpaTest_** y para
-la API REST voy a usar **_TestRestTemplate_** de Spring, haciendo uso de application-test.properties para no modificar
-la base de datos original H2 al Testear.
+- `config`: contiene la clase `SwaggerConfig` para la configuración de la documentación de la API utilizando la herramienta Swagger.
+- `controllers`: contiene el controlador `PaymentController` que maneja las solicitudes de la API relacionadas con el pago.
+- `dtos`: contiene el objeto de transferencia de datos `PaymentRequest` para representar la solicitud de pago.
+- `entities`: contiene la entidad `Payment` para representar los detalles de un pago.
+- `exceptions`: contiene excepciones personalizadas que se lanzan en caso de que ocurra algún error en el proceso de pago.
+- `repositories`: contiene el repositorio `PaymentH2Repository` que implementa la lógica para almacenar y recuperar los detalles del pago en una base de datos H2.
+- `services`: contiene el servicio `PaymentService` y su implementación `PaymentServiceImpl`, que se encarga de la lógica de negocio relacionada con el pago.
+- `test`: contiene pruebas unitarias para los controladores, repositorios y servicios.
 
 
 
 ## Funcionalidad:
 
-## El método POST / para crear una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:
+## El método POST / 
+
+para crear una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:
 
 - amount: de tipo double.
 - userId: de tipo string.
    
 El método deberá devolver el objeto Payment con los siguientes campos:
 
-- paymentId: generado automáticamente por la base de datos.
-- date: fecha de creación de la transacción.
-- amount: cantidad de la transacción.
-- userId: identificador del usuario que realizó la transacción.
-- cardLast4number: número de los últimos 4 dígitos de la tarjeta utilizada para el pago, generado de manera aleatoria.
-- authNumber: número de autorización del pago, generado de manera aleatoria.
-- bank: nombre del banco que procesó el pago, generado de manera aleatoria, dentro de una lista de bancos Ej. [BBVA, Santander, CaixaBank] etc.
-- isContactless: tipo booleano que indica si el pago fue realizado de manera contactless o no, generado de manera aleatoria.
-- status: PAYMENT_SUCCESS, indicando que la transacción fue exitosa.
+- **_paymentId_**: generado automáticamente por la base de datos.
+- **_date_**: fecha de creación de la transacción.
+- **_amount_**: cantidad de la transacción.
+- **_userId_**: identificador del usuario que realizó la transacción.
+- **_cardLast4number_**: número de los últimos 4 dígitos de la tarjeta utilizada para el pago, generado de manera aleatoria.
+- **_authNumber_**: número de autorización del pago, generado de manera aleatoria.
+- **_bank_**: nombre del banco que procesó el pago, generado de manera aleatoria, dentro de una lista de bancos Ej. [BBVA, Santander, CaixaBank] etc.
+- **_isContactless_**: tipo booleano que indica si el pago fue realizado de manera contactless o no, generado de manera aleatoria.
+- **_status_**: PAYMENT_SUCCESS, indicando que la transacción fue exitosa.
   
 ## El método GET: /paymentId 
  - deberá devolver la transacción correspondiente al identificador pasado como parámetro. 
@@ -131,26 +136,8 @@ Utilizo Spring test
     private UserRepository userRepository;
 ```
 
-### Services y Controllers
-* findAllTransactions 
-    * findAllTransactions
-    * findAllTransactionsNull
-* findOneTransaction 
-    * finOne
-    * findOneNullId
-* newTransaction 
-    * newTransaction
-    * newTransactionNull
-    * newTransactionNullParams
-    * newTransactionBlankParams
+## CONFIG PROYECT
 
-
-_No se incluiran en el proyecto: Recuperacion de contraseña ni de usuario_
-
-
-## CONFIG SPRING
-
-Crear proyecto Spring Boot con:
 * java 17
 * Spring 2.5.5
 * Spring Web
@@ -166,9 +153,7 @@ Crear proyecto Spring Boot con:
 </dependency>
 ```
 
-
-
-* PROPERTIES (H2 )
+* application.properties (H2 )
 ```
 #Preparo e Inicializo H2
 spring.jpa.show-sql=true
@@ -180,6 +165,14 @@ spring.datasource.driverClassName=org.h2.Driver
 spring.jpa.hibernate.ddl-auto=update
 spring.sql.init.mode=always
 spring.jpa.defer-datasource-initialization=true
+```
+
+
+* Data.sql (H2)
+```sql
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('03/03/2023',665.73 ,'2E', 8508,441,'BBVA',true,'PAYMENT_SUCCESS');
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('05/03/2023',54.24, '6A', 6375,441,'Santander',true,'PAYMENT_SUCCESS');
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('02/03/2023',6.13, '4D', 1545,441,'CaixaBank',false,'PAYMENT_SUCCESS');
 ```
 
 ## Consideraciones:
