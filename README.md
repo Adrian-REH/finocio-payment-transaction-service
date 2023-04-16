@@ -26,17 +26,17 @@
 │   ├── PaymentRequqestUserIdBlankException.java
 │   └── PaymentRequqestUserIdNullException.java
 ├── repositories
-│   └── PaymentH2Repository.java
+│   └── PaymentRepository.java
 ├── services
 │   ├── Impl
-│   │    └── PaymentServiceImpl.java
-│   ├── PaymentH2Service.java
-│   └── PaymentService.java
+│   │    └── PaymentBuilderImpl.java
+│   ├── PaymentService.java
+│   └── PaymentBuilder.java
 ── test
     ├── controllers
     │   └── PaymentControllerTest.java 
     ├── repositories
-    │   └── PaymentH2RepositoryDataJpaTest.java
+    │   └── PaymentRepositoryDataJpaTest.java
     └── services
         └── PaymentServiceTest.java
 
@@ -55,7 +55,7 @@
 
 ## Funcionalidad:
 
-## El método POST / 
+### El método POST / 
 
 para crear una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:
 
@@ -73,19 +73,19 @@ El método deberá devolver el objeto Payment con los siguientes campos:
 - **_bank_**: nombre del banco que procesó el pago, generado de manera aleatoria, dentro de una lista de bancos Ej. [BBVA, Santander, CaixaBank] etc.
 - **_isContactless_**: tipo booleano que indica si el pago fue realizado de manera contactless o no, generado de manera aleatoria.
 - **_status_**: PAYMENT_SUCCESS, indicando que la transacción fue exitosa.
-  
-## El método GET: /paymentId 
+
+### El método GET: /paymentId 
  - deberá devolver la transacción correspondiente al identificador pasado como parámetro. 
  - La transacción deberá tener los mismos campos que el método POST.
 
-## El método GET / 
+### El método GET / 
  - deberá devolver una lista de todos los Payment creados.
 
 
 
 ## TEST DE INTEGRACION
-Utilizo Spring test
-### TestRestTemplate
+
+### Test Api Rest with Spring
 1.  Spring Anotation
 
 ```java
@@ -120,7 +120,7 @@ Utilizo Spring test
         headers.add("Authorization", "laptop-value-45xx23");
     }
 ```
-### @DataJpaTest
+### Test Repository JPA with @DataJpaTest
 1. Anotación
 ```java
     @DataJpaTest 
@@ -134,6 +134,25 @@ Utilizo Spring test
     
     @Autowired
     private UserRepository userRepository;
+```
+### Test Functions Junit4
+1. Anotación
+```java
+    @RunWith(Parameterized.class)
+
+```
+2. Inicialización
+```java
+    public PaymentService paymentService;
+    
+    public PaymentServiceTest(PaymentService paymentService) {
+            this.paymentService = paymentService;
+    }
+```
+2. Exceptions
+```java
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 ```
 
 ## CONFIG PROYECT

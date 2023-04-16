@@ -188,7 +188,7 @@ public class PaymentControllerTest {
      * check si la peticion contiene los campos requeridos
      */
     @Test
-    public void findOnePaymentsTest(){
+    public void findByIdPaymentsTest(){
         ResponseEntity<Payment> response = testRestTemplate.getForEntity("/1", Payment.class);
 
         Payment result = response.getBody();
@@ -224,7 +224,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void findOnePaymentsTestFailNotFound(){
+    public void findByIdPaymentsTestFailNotFound(){
         ResponseEntity<Payment> response = testRestTemplate.getForEntity("/100", Payment.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

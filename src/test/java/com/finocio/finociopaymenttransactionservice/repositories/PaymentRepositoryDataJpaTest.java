@@ -18,8 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @TestPropertySource(locations = "/application-test.properties")
-public class PaymentH2RepositoryDataJpaTest {
+public class PaymentRepositoryDataJpaTest {
 
+    private Payment PAYMENT_NEW =  new Payment(null,"14/03/2023",845.73 ,"5E", 5318,885,"BBVA",false,"PAYMENT_SUCCESS");
     private Payment PAYMENT_1 =  new Payment(1l,"03/03/2023",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
     private Payment PAYMENT_2 =  new Payment(2l,"05/03/2023",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
     private Payment PAYMENT_3 =  new Payment(3l,"02/03/2023",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
@@ -30,21 +31,21 @@ public class PaymentH2RepositoryDataJpaTest {
     private TestEntityManager entityManager;
 
     @Autowired
-    private PaymentH2Repository paymentH2Repository;
+    private PaymentRepository paymentRepository;
 
     @Test
     public void whenSavePayment_thenReturnPayment(){
 
-        Payment payment = paymentH2Repository.save(PAYMENT_1);
+        Payment payment = paymentRepository.save(PAYMENT_NEW);
 
-        assertThat(payment.getPaymentId()) .isEqualTo(4);
-        assertThat(payment.getAmount()) .isEqualTo(PAYMENT_1.getAmount());
-        assertThat(payment.getUserId()) .isEqualTo(PAYMENT_1.getUserId());
-        assertThat(payment.getDate()) .isEqualTo(PAYMENT_1.getDate());
-        assertThat(payment.getCardLast4number()) .isEqualTo(PAYMENT_1.getCardLast4number());
-        assertThat(payment.getBank()) .isEqualTo(PAYMENT_1.getBank());
-        assertThat(payment.getContractless()) .isEqualTo(PAYMENT_1.getContractless());
-        assertThat(payment.getStatus()) .isEqualTo(PAYMENT_1.getStatus());
+        assertThat(payment.getPaymentId()) .isEqualTo(4L);
+        assertThat(payment.getAmount()) .isEqualTo(PAYMENT_NEW.getAmount());
+        assertThat(payment.getUserId()) .isEqualTo(PAYMENT_NEW.getUserId());
+        assertThat(payment.getDate()) .isEqualTo(PAYMENT_NEW.getDate());
+        assertThat(payment.getCardLast4number()) .isEqualTo(PAYMENT_NEW.getCardLast4number());
+        assertThat(payment.getBank()) .isEqualTo(PAYMENT_NEW.getBank());
+        assertThat(payment.getContractless()) .isEqualTo(PAYMENT_NEW.getContractless());
+        assertThat(payment.getStatus()) .isEqualTo(PAYMENT_NEW.getStatus());
 
 
 
@@ -53,10 +54,9 @@ public class PaymentH2RepositoryDataJpaTest {
     @Test
     public void whenFindOnePayment_thenReturnPayment(){
 
-        Optional<Payment> paymentOpt = paymentH2Repository.findById(1L);
+        Optional<Payment> paymentOpt = paymentRepository.findById(1L);
 
         if (paymentOpt.isEmpty()) assertThat(1).isEqualTo(1);
-
 
         Payment payment = paymentOpt.get();
         assertThat(payment.getPaymentId()) .isEqualTo(1L);
@@ -72,9 +72,9 @@ public class PaymentH2RepositoryDataJpaTest {
     }
 
     @Test
-    public void whenFindOnePayment_thenReturnPaymentList(){
+    public void whenFinAllPayment_thenReturnPaymentList(){
 
-        List<Payment> listPayment = paymentH2Repository.findAll();
+        List<Payment> listPayment = paymentRepository.findAll();
 
         assertThat(listPayment.toString()) .isEqualTo(paymentList.toString());
 
