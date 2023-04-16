@@ -2,6 +2,10 @@ package com.finocio.finociopaymenttransactionservice.dto;
 
 
 import com.finocio.finociopaymenttransactionservice.entities.Payment;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.Entity;
+
 
 public class PaymentRequest {
     private Double amount;

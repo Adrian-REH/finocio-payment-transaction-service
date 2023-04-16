@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "payment")
+@Table(name = "op_payment")
 public class Payment {
 
     @Id
@@ -16,7 +16,7 @@ public class Payment {
 
     @Column
     @ApiParam("fecha de creación de la transacción")
-    private Date date;
+    private String date;
 
     @Column
     @ApiParam("cantidad de la transacción")
@@ -24,7 +24,7 @@ public class Payment {
 
     @Column
     @ApiParam("Identificador del usuario que realizó la transacción")
-    private Long userId;
+    private String userId;
 
     @Column
     @ApiParam("número de los últimos 4 dígitos de la tarjeta utilizada para el pago, generado de manera aleatoria.")
@@ -51,7 +51,7 @@ public class Payment {
     }
 
 
-    public Payment(Long paymentId, Date date, Double amount, Long userId, Integer cardLast4number, Integer authNumber, String bank, Boolean isContractless, String status) {
+    public Payment(Long paymentId, String date, Double amount, String userId, Integer cardLast4number, Integer authNumber, String bank, Boolean isContractless, String status) {
         this.paymentId = paymentId;
         this.date = date;
         this.amount = amount;
@@ -63,6 +63,7 @@ public class Payment {
         this.status = status;
     }
 
+
     public Long getPaymentId() {
         return paymentId;
     }
@@ -71,11 +72,11 @@ public class Payment {
         this.paymentId = paymentId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -87,11 +88,11 @@ public class Payment {
         this.amount = amount;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -135,19 +136,6 @@ public class Payment {
         this.status = status;
     }
 
-    public Payment getPayment() {
-        Payment payment= new Payment();
-        payment.setBank(bank);
-        payment.setStatus(status);
-        payment.setAmount(amount);
-        payment.setAuthNumber(authNumber);
-        payment.setCardLast4number(cardLast4number);
-        payment.setUserId(userId);
-        payment.setDate(date);
-        payment.setContractless(isContractless);
-
-        return payment;
-    }
 
     @Override
     public String toString() {
