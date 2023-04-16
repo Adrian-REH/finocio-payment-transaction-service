@@ -23,7 +23,7 @@ public class PaymentBuilderImpl implements PaymentBuilder {
      * @param paymentRequest
      * @return Payment
      */
-    public  Payment generatePayment(PaymentRequest paymentRequest)  {
+    public  Payment buildPayment(PaymentRequest paymentRequest)  {
 
         checkParameters(paymentRequest);
 
@@ -39,7 +39,6 @@ public class PaymentBuilderImpl implements PaymentBuilder {
 
         return payment;
     }
-
     private void checkParameters(PaymentRequest paymentRequest){
         if (paymentRequest.getAmount()==null)
             throw new PaymentRequestAmountNullRequestException("Amount is null");
@@ -47,13 +46,14 @@ public class PaymentBuilderImpl implements PaymentBuilder {
         if (paymentRequest.getUserId()==null)
             throw new PaymentRequestUserIdNullRequestException("UserID is null");
 
-        if (paymentRequest.getAmount()==0d)
-            throw new PaymentRequestAmountCeroRequestException("Amount is 0");
+        if (paymentRequest.getAmount()<=0d)
+            throw new PaymentRequestAmountCeroRequestException("Amount is menor o igual a 0");
 
         if (paymentRequest.getUserId().isBlank())
             throw new PaymentRequestUserIdBlankRequestException("UserID is Blank");
 
     }
+
     /**
      * Check si AmountIsNull
      * Check si UserIdIsNull

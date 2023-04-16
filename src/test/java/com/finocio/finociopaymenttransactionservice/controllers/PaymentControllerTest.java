@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "/application-test.properties")
 public class PaymentControllerTest {
-    private final Payment PAYMENT_1 =  new Payment(1l,"03/03/2023",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
-    private final Payment PAYMENT_2 =  new Payment(2l,"05/03/2023",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
-    private final Payment PAYMENT_3 =  new Payment(3l,"02/03/2023",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_1 =  new Payment(1L,"03/03/2023",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_2 =  new Payment(2L,"05/03/2023",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_3 =  new Payment(3L,"02/03/2023",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
 
     private final List<Payment> paymentList= new  ArrayList<Payment>(Arrays.asList(PAYMENT_1, PAYMENT_2,PAYMENT_3));
 
@@ -49,6 +49,26 @@ public class PaymentControllerTest {
     }
 
 
+    @Test
+    public void createNewTransactionTestFailAmountNegative(){
+        HttpEntity<PaymentRequest> request = new HttpEntity<>(new PaymentRequest(-0.2d,"1"),headers);
+        ResponseEntity<Payment> response = testRestTemplate.postForEntity("/",request, Payment.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(400, response.getStatusCodeValue());
+
+
+    }
+    @Test
+    public void createNewTransactionTestFailAmountIlimit(){
+        HttpEntity<PaymentRequest> request = new HttpEntity<>(new PaymentRequest(9999999999999999999999999999999999999999999999999999999999999999999999d,"1"),headers);
+        ResponseEntity<Payment> response = testRestTemplate.postForEntity("/",request, Payment.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(200, response.getStatusCodeValue());
+
+
+    }
     @Test
     public void createNewTransactionTestFailAmountNull(){
         HttpEntity<PaymentRequest> request = new HttpEntity<>(new PaymentRequest(null,"1"),headers);

@@ -5,5 +5,5 @@ import com.finocio.finociopaymenttransactionservice.entities.Payment;
 
 
 public interface PaymentBuilder {
-    Payment generatePayment(PaymentRequest paymentRequest);
+    Payment buildPayment(PaymentRequest paymentRequest);
 }
