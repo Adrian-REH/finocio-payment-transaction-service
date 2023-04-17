@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(Parameterized.class)
 public class PaymentBuilderTest {
 
-    public PaymentBuilder paymentService;
+    public PaymentBuilder paymentBuilder;
 
-    public PaymentBuilderTest(PaymentBuilder paymentService) {
-        this.paymentService = paymentService;
+    public PaymentBuilderTest(PaymentBuilder paymentBuilder) {
+        this.paymentBuilder = paymentBuilder;
     }
 
     @Rule
@@ -33,7 +32,7 @@ public class PaymentBuilderTest {
 
     @Test
     public void testGeneratePaymentWithSuccess() {
-        Payment payment = paymentService.buildPayment(new PaymentRequest(0.2d,  "value"));
+        Payment payment = paymentBuilder.buildPayment(new PaymentRequest(0.2d,  "value"));
 
         assertNotNull(payment.getAuthNumber());
         assertNotNull(payment.getCardLast4number());
@@ -46,14 +45,14 @@ public class PaymentBuilderTest {
         exceptionRule.expect(PaymentRequestAmountCeroRequestException.class);
         exceptionRule.expectMessage("Amount is menor o igual a 0");
 
-        paymentService.buildPayment(new PaymentRequest(-10000.5d,  "value"));
+        paymentBuilder.buildPayment(new PaymentRequest(-10000.5d,  "value"));
 
     }
 
     @Test
     public void testGeneratePaymentWithFailAmountIllimit() {
 
-        paymentService.buildPayment(new PaymentRequest(9999999999999999999999999999999999999999999999999999999999999999999999d,  "value"));
+        paymentBuilder.buildPayment(new PaymentRequest(9999999999999999999999999999999999999999999999999999999999999999999999d,  "value"));
 
     }
 
@@ -62,7 +61,7 @@ public class PaymentBuilderTest {
         exceptionRule.expect(PaymentRequestAmountNullRequestException.class);
         exceptionRule.expectMessage("Amount is null");
 
-        paymentService.buildPayment(new PaymentRequest(null,  "value"));
+        paymentBuilder.buildPayment(new PaymentRequest(null,  "value"));
 
     }
 
@@ -71,7 +70,7 @@ public class PaymentBuilderTest {
         exceptionRule.expect(PaymentRequestAmountCeroRequestException.class);
         exceptionRule.expectMessage("Amount is menor o igual a 0");
 
-        paymentService.buildPayment(new PaymentRequest(0d,  "value"));
+        paymentBuilder.buildPayment(new PaymentRequest(0d,  "value"));
 
     }
 
@@ -80,7 +79,7 @@ public class PaymentBuilderTest {
         exceptionRule.expect(PaymentRequestUserIdNullRequestException.class);
         exceptionRule.expectMessage("UserID is null");
 
-        paymentService.buildPayment(new PaymentRequest(2.3d,  null));
+        paymentBuilder.buildPayment(new PaymentRequest(2.3d,  null));
 
 
     }
@@ -90,7 +89,7 @@ public class PaymentBuilderTest {
         exceptionRule.expect(PaymentRequestUserIdBlankRequestException.class);
         exceptionRule.expectMessage("UserID is Blank");
 
-        paymentService.buildPayment(new PaymentRequest(2.3d,  ""));
+        paymentBuilder.buildPayment(new PaymentRequest(2.3d,  ""));
 
 
 

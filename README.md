@@ -47,8 +47,8 @@
 - `dtos`: contiene el objeto de transferencia de datos `PaymentRequest` para representar la solicitud de pago.
 - `entities`: contiene la entidad `Payment` para representar los detalles de un pago.
 - `exceptions`: contiene excepciones personalizadas que se lanzan en caso de que ocurra algún error en el proceso de pago.
-- `repositories`: contiene el repositorio `PaymentH2Repository` que implementa la lógica para almacenar y recuperar los detalles del pago en una base de datos H2.
-- `services`: contiene el servicio `PaymentService` y su implementación `PaymentServiceImpl`, que se encarga de la lógica de negocio relacionada con el pago.
+- `repositories`: contiene el repositorio `PaymentRepository` que implementa la lógica para almacenar y recuperar los detalles del pago en una base de datos H2.
+- `services`: contiene el servicio `PaymentService`y `PaymentBuilder` con su implementación `PaymentBuilderImpl`, que se encarga de la lógica de negocio relacionada con el pago.
 - `test`: contiene pruebas unitarias para los controladores, repositorios y servicios.
 
 
@@ -57,12 +57,12 @@
 
 ### El método POST / 
 
-para crear una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:
+Crea una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:
 
 - amount: de tipo double.
 - userId: de tipo string.
    
-El método deberá devolver el objeto Payment con los siguientes campos:
+El método devuelve el objeto Payment en formato JSON con los siguientes campos:
 
 - **_paymentId_**: generado automáticamente por la base de datos.
 - **_date_**: fecha de creación de la transacción.
@@ -75,85 +75,170 @@ El método deberá devolver el objeto Payment con los siguientes campos:
 - **_status_**: PAYMENT_SUCCESS, indicando que la transacción fue exitosa.
 
 ### El método GET: /paymentId 
- - deberá devolver la transacción correspondiente al identificador pasado como parámetro. 
- - La transacción deberá tener los mismos campos que el método POST.
+ - Devuelve la transacción correspondiente al identificador pasado como parámetro. 
+ - La transacción tiene los mismos campos que el método POST.
 
 ### El método GET / 
- - deberá devolver una lista de todos los Payment creados.
+ - Devuelve una lista de todos los Payment creados.
 
 
 
-## TEST DE INTEGRACION
+## TEST UNITARIO
 
 ### Test Api Rest with Spring
-1.  Spring Anotation
+Escenarios de prueba y definicion de entrada para la API 
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "/application-test.properties")
+public class PaymentControllerTest {
+    private final Payment PAYMENT_1 = new Payment(1L, "03-03-2023 03:09", 665.73, "2E", 8508, 441, "BBVA", true, "PAYMENT_SUCCESS");
+    private final Payment PAYMENT_2 = new Payment(2L, "05-03-2023 03:09", 54.24, "6A", 6375, 441, "Santander", true, "PAYMENT_SUCCESS");
+    private final Payment PAYMENT_3 = new Payment(3L, "02-03-2023 03:09", 6.13, "4D", 1545, 441, "CaixaBank", false, "PAYMENT_SUCCESS");
 
-```java
-    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-    @TestPropertySource(locations = "/application-test.properties")
-```
-2. Headers
-```java
-    private final HttpHeaders headers = new HttpHeaders();
+    private final List<Payment> paymentList = new ArrayList<Payment>(Arrays.asList(PAYMENT_1, PAYMENT_2, PAYMENT_3));
 
-```
-3. Objects
-```java
-    private final PaymentRequest paymentRequest = new PaymentRequest();
-```
-1.  Templeate and Port
-```java
+
     private TestRestTemplate testRestTemplate;
+    private final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+
     @LocalServerPort
     private int port;
-```
-2. Build
-```java
+
     @BeforeEach
-    public void setUp(){
-        restTemplateBuilder = restTemplateBuilder
-                .rootUri("http://localhost:"+port);
-        testRestTemplate= new TestRestTemplate(restTemplateBuilder);
-        headers.add("Authorization", "laptop-value-45xx23");
+    public void setUp() {
+        restTemplateBuilder = restTemplateBuilder.rootUri("http://localhost:" + port);
+        testRestTemplate = new TestRestTemplate(restTemplateBuilder);
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
     }
-```
-### Test Repository JPA with @DataJpaTest
-1. Anotación
-```java
-    @DataJpaTest 
-    @TestPropertySource(locations = "/application-test.properties")
+    
+    
+    
+    @Test
+    public void createNewTransactionTestFailAmountNegative();
+
+    @Test
+    public void createNewTransactionTestFailAmountIlimit() ;
+    @Test
+    public void createNewTransactionTestFailAmountNull() ;
+
+    @Test
+    public void createNewTransactionTestFailAmounCero() ;
+
+    @Test
+    public void createNewTransactionTestFailUserIdNull() ;
+
+    @Test
+    public void createNewTransactionTestFailUserIdBlank() ;
+
+    @Test
+    public void createNewDuplicateTransactionTest() ;
+
+    @Test
+    public void createNewTransactionTest() ;
+    
+    @Test
+    public void findAllPaymentsTest() ;
+
+    @Test
+    public void findByIdPaymentsTest() ;
+
+    private boolean containBankList(String bank) ;
+    
+    private int cuentaCifras(int num) ;
+
+    @Test
+    public void findByIdPaymentsTestFailNotFound() ;
+
+
+}
 
 ```
-2. Uso de metodos JPA
+
+### Test Repository JPA with @DataJpaTest
+Escenarios de prueba y definicion de entrada para la gestion de BD
+
 ```java
+@DataJpaTest
+@TestPropertySource(locations = "/application-test.properties")
+public class PaymentRepositoryDataJpaTest {
+
+    private Payment PAYMENT_NEW =  new Payment(null,"14-03-2023 03:09" ,845.73 ,"5E", 5318,885,"BBVA",false,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_1 =  new Payment(1l,"03-03-2023 03:09",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_2 =  new Payment(2l,"05-03-2023 03:09",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_3 =  new Payment(3l,"02-03-2023 03:09",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
+
+    private final List<Payment> paymentList= new  ArrayList<Payment>(Arrays.asList(PAYMENT_1, PAYMENT_2,PAYMENT_3));
+
     @Autowired
     private TestEntityManager entityManager;
-    
-    @Autowired
-    private UserRepository userRepository;
-```
-### Test Functions Junit4
-1. Anotación
-```java
-    @RunWith(Parameterized.class)
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Test
+    public void whenSavePayment_thenReturnPayment(){}
+
+    @Test
+    public void whenFindOnePayment_thenReturnPayment(){}
+
+    @Test
+    public void whenFinAllPayment_thenReturnPaymentList(){}
+
+}
 ```
-2. Inicialización
+
+### Test Functions Junit4
+Escenarios de prueba y definicion de entrada para construir un Payment
 ```java
-    public PaymentService paymentService;
-    
-    public PaymentServiceTest(PaymentService paymentService) {
-            this.paymentService = paymentService;
+@RunWith(Parameterized.class)
+public class PaymentBuilderTest {
+
+    public PaymentBuilder paymentBuilder;
+
+    public PaymentBuilderTest(PaymentBuilder paymentBuilder) {
+        this.paymentBuilder = paymentBuilder;
     }
-```
-2. Exceptions
-```java
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
+
+    @Test
+    public void testGeneratePaymentWithSuccess() {}
+
+    @Test
+    public void testGeneratePaymentWithFailAmountNegative() {}
+
+    @Test
+    public void testGeneratePaymentWithFailAmountIllimit() {}
+
+    @Test
+    public void testGeneratePaymentWithFailAmountNull() {}
+
+    @Test
+    public void testGeneratePaymentWithFailAmountCero() {}
+
+    @Test
+    public void testGeneratePaymentWithFailUserIdNull() {}
+
+    @Test
+    public void testGeneratePaymentWithFailUserIdBlank() {}
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> instancesToTest() {
+        return Arrays.asList(
+                new Object[]{new PaymentBuilderImpl()},
+                new Object[]{new PaymentBuilderImpl()}
+        );
+    }
+}
 ```
+
 
 ## CONFIG PROYECT
 
@@ -189,9 +274,9 @@ spring.jpa.defer-datasource-initialization=true
 
 * Data.sql (H2)
 ```sql
-insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('03/03/2023',665.73 ,'2E', 8508,441,'BBVA',true,'PAYMENT_SUCCESS');
-insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('05/03/2023',54.24, '6A', 6375,441,'Santander',true,'PAYMENT_SUCCESS');
-insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('02/03/2023',6.13, '4D', 1545,441,'CaixaBank',false,'PAYMENT_SUCCESS');
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('03-03-2023 03:09',665.73 ,'2E', 8508,441,'BBVA',true,'PAYMENT_SUCCESS');
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('05-03-2023 03:09',54.24, '6A', 6375,441,'Santander',true,'PAYMENT_SUCCESS');
+insert into op_payment(date, amount, user_id,card_last4number,auth_number,bank,is_contractless,status) VALUES ('02-03-2023 03:09',6.13, '4D', 1545,441,'CaixaBank',false,'PAYMENT_SUCCESS');
 ```
 
 ## Consideraciones:
