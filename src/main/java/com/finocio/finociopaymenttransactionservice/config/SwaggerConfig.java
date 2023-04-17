@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Configuracion de Swagger para la documentacion de la API Rest.
  * http://localhost:8080/swagger-ui/ --> HTML
  */
 @Configuration // anotacion para todas las clases spring de configuracion

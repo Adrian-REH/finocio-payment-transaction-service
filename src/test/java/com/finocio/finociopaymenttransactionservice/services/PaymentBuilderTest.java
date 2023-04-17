@@ -38,6 +38,7 @@ public class PaymentBuilderTest {
         assertNotNull(payment.getAuthNumber());
         assertNotNull(payment.getCardLast4number());
         assertNotNull(payment.getBank());
+        System.out.println(payment.getDate());
     }
 
     @Test

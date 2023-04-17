@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Controllador de la API para las peticiones
+ * POST / , GET / y GET /{paymentid}
+ */
 @RestController
 public class PaymentController {
 
@@ -35,12 +39,12 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+
     @GetMapping("/")
     @ApiOperation(value = "Busca todos los pagos", notes ="Devuelve una lista de todos los Payment creados ")
     public ResponseEntity<List<Payment>> findAllPayments(){
         return ResponseEntity.ok(paymentService.findAllPayments());
     }
-
 
     @GetMapping("/{paymentId}")
     @ApiOperation(value = "Busca un solo pago", notes ="Devuelve un Payment Object de la transacción correspondiente al identificador pasado como parámetro")
@@ -55,11 +59,8 @@ public class PaymentController {
     @PostMapping("/")
     @ApiOperation(value = "Crea una nueva Transaccion de pago", notes = "Crear una transacción de pago deberá solicitar un objeto PaymentRequest con las siguientes propiedades:")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created", response = Payment.class),
-            @ApiResponse(code = 400, message = "UserID is null", response = PaymentRequestException.class),
-            @ApiResponse(code = 400, message = "UserID is Blank", response = PaymentRequestException.class),
-            @ApiResponse(code = 400, message = "Amount is null", response = PaymentRequestException.class),
-            @ApiResponse(code = 400, message = "Amount is 0", response = PaymentRequestException.class),
+            @ApiResponse(code = 200, message = "Created success", response = Payment.class),
+            @ApiResponse(code = 400, message = "UserID is null or Blank. Amount is Null or less than or equal to 0", response = PaymentRequestException.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = ExecutionControl.class)})
     public ResponseEntity<Payment> createNewTransaction( @RequestBody PaymentRequest paymentRequest){
         return ResponseEntity.ok(paymentService.savePayment(paymentBuilder.buildPayment(paymentRequest)));

@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestPropertySource(locations = "/application-test.properties")
 public class PaymentRepositoryDataJpaTest {
 
-    private Payment PAYMENT_NEW =  new Payment(null,"14/03/2023",845.73 ,"5E", 5318,885,"BBVA",false,"PAYMENT_SUCCESS");
-    private Payment PAYMENT_1 =  new Payment(1l,"03/03/2023",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
-    private Payment PAYMENT_2 =  new Payment(2l,"05/03/2023",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
-    private Payment PAYMENT_3 =  new Payment(3l,"02/03/2023",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_NEW =  new Payment(null,"14-03-2023 03:09" ,845.73 ,"5E", 5318,885,"BBVA",false,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_1 =  new Payment(1l,"03-03-2023 03:09",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_2 =  new Payment(2l,"05-03-2023 03:09",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
+    private Payment PAYMENT_3 =  new Payment(3l,"02-03-2023 03:09",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
 
     private final List<Payment> paymentList= new  ArrayList<Payment>(Arrays.asList(PAYMENT_1, PAYMENT_2,PAYMENT_3));
 

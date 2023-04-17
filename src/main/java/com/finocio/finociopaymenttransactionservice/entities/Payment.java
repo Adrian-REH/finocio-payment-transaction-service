@@ -1,5 +1,7 @@
 package com.finocio.finociopaymenttransactionservice.entities;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
 import javax.persistence.*;
@@ -7,34 +9,44 @@ import java.util.Date;
 
 @Entity
 @Table(name = "op_payment")
+@ApiModel(description = "Un objeto que representa un pago y se guarda en BD.")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(notes = "ID único del pago generado automáticamente por la base de datos.", example = "1")
     private Long paymentId;
 
     @Column
+    @ApiModelProperty(notes = "Fecha de creación de la transacción.", example = "dd-MM-yyyy HH:mm")
     private String date;
 
     @Column
+    @ApiModelProperty(notes = "Cantidad de la transacción.", example = "100.50", required = true)
     private Double amount;
 
     @Column
+    @ApiModelProperty(notes = "Identificador del usuario que realizó la transacción.", example = "123", required = true)
     private String userId;
 
     @Column
+    @ApiModelProperty(notes = "Número de los últimos 4 dígitos de la tarjeta utilizada para el pago, generado de manera aleatoria.", example = "1234")
     private Integer cardLast4number;
 
     @Column
+    @ApiModelProperty(notes = "Número de autorización del pago, generado de manera aleatoria.", example = "123456")
     private Integer authNumber;
 
     @Column
+    @ApiModelProperty(notes = "Nombre del banco que procesó el pago, generado de manera aleatoria de una lista de bancos.", example = "BBVA")
     private String bank;
 
     @Column
+    @ApiModelProperty(notes = "Indica si el pago fue realizado de manera contactless o no, generado de manera aleatoria.", example = "true")
     private Boolean isContractless;
 
     @Column
+    @ApiModelProperty(notes = "Estado del pago, indicando si la transacción fue exitosa.", example = "PAYMENT_SUCCESS")
     private String status;
 
     public Payment(){
@@ -53,7 +65,6 @@ public class Payment {
         this.isContractless = isContractless;
         this.status = status;
     }
-
 
     public Long getPaymentId() {
         return paymentId;

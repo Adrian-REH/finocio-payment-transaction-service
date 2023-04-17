@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "/application-test.properties")
 public class PaymentControllerTest {
-    private final Payment PAYMENT_1 =  new Payment(1L,"03/03/2023",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
-    private final Payment PAYMENT_2 =  new Payment(2L,"05/03/2023",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
-    private final Payment PAYMENT_3 =  new Payment(3L,"02/03/2023",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_1 =  new Payment(1L,"03-03-2023 03:09",665.73 ,"2E", 8508,441,"BBVA",true,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_2 =  new Payment(2L,"05-03-2023 03:09",54.24, "6A", 6375,441,"Santander",true,"PAYMENT_SUCCESS");
+    private final Payment PAYMENT_3 =  new Payment(3L,"02-03-2023 03:09",6.13, "4D", 1545,441,"CaixaBank",false,"PAYMENT_SUCCESS");
 
     private final List<Payment> paymentList= new  ArrayList<Payment>(Arrays.asList(PAYMENT_1, PAYMENT_2,PAYMENT_3));
 

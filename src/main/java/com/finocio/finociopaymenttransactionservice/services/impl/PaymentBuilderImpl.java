@@ -28,11 +28,11 @@ public class PaymentBuilderImpl implements PaymentBuilder {
         checkParameters(paymentRequest);
 
         Payment payment = new Payment();
-        payment.setDate(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        payment.setDate(new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date()));
         payment.setAmount(paymentRequest.getAmount());
         payment.setUserId(paymentRequest.getUserId());
         payment.setCardLast4number(new Random().nextInt(999,9999));
-        payment.setAuthNumber(new Random().nextInt(0,9999));
+        payment.setAuthNumber(new Random().nextInt(0,999999));
         payment.setBank(generateRandomBank());
         payment.setContractless(new Random().nextBoolean());
         payment.setStatus("PAYMENT_SUCCESS");
